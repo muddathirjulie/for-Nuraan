@@ -25,26 +25,40 @@ body {
 .float {
   position: absolute;
   bottom: -40px;
-  opacity: 0.45;
+  opacity: 0.5;
   animation: floatUp linear infinite;
   pointer-events: none;
 }
 
 @keyframes floatUp {
   from { transform: translateY(0) rotate(0deg); opacity: 0; }
-  20% { opacity: 0.45; }
+  20% { opacity: 0.5; }
   to { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+}
+
+/* Falling petals */
+.petal {
+  position: absolute;
+  top: -40px;
+  font-size: 18px;
+  opacity: 0.7;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  from { transform: translateY(0) rotate(0deg); }
+  to { transform: translateY(120vh) rotate(360deg); }
 }
 
 /* Card */
 .card {
   position: relative;
   background: linear-gradient(180deg, #fff6f8, #ffe9ef);
-  padding: 60px 50px;
-  border-radius: 35px;
+  padding: 55px 40px;
+  border-radius: 32px;
   box-shadow: 0 40px 80px rgba(0,0,0,0.25);
   max-width: 600px;
-  width: 92%;
+  width: 94%;
   text-align: center;
   z-index: 2;
   animation: floatCard 6s ease-in-out infinite;
@@ -76,110 +90,133 @@ body {
 
 h1 {
   font-family: "Great Vibes", cursive;
-  font-size: 3.5rem;
+  font-size: 3rem;
   color: #c9184a;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 p {
-  font-size: 1.08rem;
-  line-height: 1.75;
+  font-size: 1.05rem;
+  line-height: 1.7;
   color: #5a3a42;
-  margin-bottom: 20px;
-}
-
-.rose-divider {
-  font-size: 1.4rem;
-  margin: 28px 0;
-  opacity: 0.7;
+  min-height: 3.5em;
 }
 
 .question {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   color: #b51743;
-  margin: 30px 0;
+  margin: 28px 0;
+  min-height: 2em;
   font-style: italic;
 }
 
 .buttons {
   display: flex;
   justify-content: center;
-  gap: 22px;
+  gap: 18px;
+  opacity: 0;
+  animation: fadeButtons 1s ease forwards;
+  animation-delay: 8s;
 }
 
+@keyframes fadeButtons { to { opacity: 1; } }
+
 button {
-  padding: 15px 38px;
+  padding: 14px 34px;
   border-radius: 22px;
   border: none;
+  font-size: 1rem;
   cursor: pointer;
   font-family: "Playfair Display", serif;
-  font-size: 1rem;
-  transition: all 0.3s ease;
 }
 
 .yes {
   background: linear-gradient(135deg, #c9184a, #ff4d6d);
   color: white;
-  box-shadow: 0 12px 25px rgba(201,24,74,0.45);
 }
 
 .ofcourse {
   background: #fff;
   color: #b51743;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 }
 
 /* Hide form */
-form { display: none; }
+form { display:none; }
+
+@media (max-width:480px) {
+  h1 { font-size: 2.6rem; }
+  .card { padding: 45px 25px; }
+}
 </style>
 </head>
 
 <body>
 
-<!-- Formspree Hidden Form -->
 <form id="valentineForm" action="https://formspree.io/f/xnjjowzp" method="POST">
   <input type="hidden" name="choice" id="choiceField">
 </form>
 
+<!-- Music -->
+<audio id="bgm" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_5c9b0b3b16.mp3" type="audio/mpeg">
+</audio>
+
 <script>
-const symbols = ["❤","🌹","💗","🌸"];
-for (let i = 0; i < 28; i++) {
-  const e = document.createElement("div");
-  e.className = "float";
-  e.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
-  e.style.left = Math.random() * 100 + "vw";
-  e.style.fontSize = Math.random() * 18 + 14 + "px";
-  e.style.animationDuration = Math.random() * 10 + 14 + "s";
+// Play music after user interaction (mobile safe)
+document.addEventListener("click", () => {
+  const music = document.getElementById("bgm");
+  if (music.paused) music.play();
+}, { once: true });
+
+// Floating hearts
+const symbols=["❤","🌹","💗","🌸"];
+for(let i=0;i<20;i++){
+  const e=document.createElement("div");
+  e.className="float";
+  e.innerHTML=symbols[Math.floor(Math.random()*symbols.length)];
+  e.style.left=Math.random()*100+"vw";
+  e.style.fontSize=Math.random()*18+14+"px";
+  e.style.animationDuration=Math.random()*10+14+"s";
   document.body.appendChild(e);
 }
 
-function send(choice, page) {
-  document.getElementById("choiceField").value = "Ammaarah clicked: " + choice;
+// Falling petals
+setInterval(()=>{
+  const p=document.createElement("div");
+  p.className="petal";
+  p.innerHTML="🌸";
+  p.style.left=Math.random()*100+"vw";
+  p.style.fontSize=Math.random()*14+12+"px";
+  p.style.animationDuration=Math.random()*5+6+"s";
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),10000);
+},700);
+
+// Typewriter
+const t1="We’ve only been speaking for just over a week, but it’s already been something really lovely. Our conversations have felt easy, thoughtful, and natural.";
+const t2="I wanted to do something special for Valentine’s Day — just honest about enjoying where this is going.";
+const q="Would you be my Valentine?";
+let i=0,j=0,k=0;
+
+setInterval(()=>{
+  if(i<t1.length) t1el.innerHTML+=t1.charAt(i++);
+  else if(j<t2.length) t2el.innerHTML+=t2.charAt(j++);
+  else if(k<q.length) qel.innerHTML+=q.charAt(k++);
+},40);
+
+// Email sender
+function send(choice,page){
+  document.getElementById("choiceField").value="Ammaarah clicked: "+choice;
   document.getElementById("valentineForm").submit();
-  setTimeout(() => {
-    window.location.href = page;
-  }, 300);
+  setTimeout(()=>window.location.href=page,300);
 }
 </script>
 
 <div class="card">
   <h1>Ammaarah</h1>
-
-  <p>
-    We’ve only been speaking for just over a week,
-    but it’s already been something really lovely.
-    Our conversations have felt easy,
-    thoughtful, and natural.
-  </p>
-
-  <p>
-    I wanted to do something special for Valentine’s Day —
-    just honest about enjoying where this is going.
-  </p>
-
-  <div class="rose-divider">🌹 🌸 🌹</div>
-
-  <div class="question">Would you be my Valentine?</div>
+  <p id="t1el"></p>
+  <p id="t2el"></p>
+  <div class="question" id="qel"></div>
 
   <div class="buttons">
     <button class="yes" onclick="send('Yes','yes.html')">Yes</button>
