@@ -1,29 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Thank You 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Great+Vibes&display=swap" rel="stylesheet">
+
 <style>
-body{
-  margin:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-  background:linear-gradient(135deg,#ffe4ec,#f6b8c4);
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #ffe4ec, #f6b8c4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: "Playfair Display", serif;
-  text-align:center;
+  overflow: hidden;
 }
-h1{color:#c9184a;font-size:3rem;}
-p{color:#5a3a42;font-size:1.2rem;}
+
+.float {
+  position: absolute;
+  bottom: -40px;
+  opacity: 0.5;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(0); }
+  to { transform: translateY(-120vh); }
+}
+
+.card {
+  background: linear-gradient(180deg, #fff6f8, #ffe9ef);
+  padding: 60px 50px;
+  border-radius: 35px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.25);
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+}
+
+h1 {
+  font-family: "Great Vibes", cursive;
+  font-size: 3rem;
+  color: #c9184a;
+}
+
+p {
+  font-size: 1.2rem;
+  color: #5a3a42;
+}
 </style>
 </head>
+
 <body>
-<div>
-  <h1>You said yes 💖</h1>
+
+<script>
+const symbols=["❤","🌹","💗"];
+for(let i=0;i<25;i++){
+  const e=document.createElement("div");
+  e.className="float";
+  e.innerHTML=symbols[Math.floor(Math.random()*symbols.length)];
+  e.style.left=Math.random()*100+"vw";
+  e.style.fontSize=Math.random()*20+14+"px";
+  e.style.animationDuration=Math.random()*8+10+"s";
+  document.body.appendChild(e);
+}
+</script>
+
+<div class="card">
+  <h1>You said Yes 💖</h1>
   <p>
-    I’m really glad I asked.  
-    I can’t wait to spend Valentine’s Day with you 🌹
+    That genuinely means a lot.  
+    I can’t wait to make Valentine’s Day special with you 🌹
   </p>
 </div>
+
 </body>
 </html>
