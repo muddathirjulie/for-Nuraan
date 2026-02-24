@@ -21,6 +21,7 @@ body{
   position:relative;
 }
 
+/* Soft vignette */
 body::after{
   content:"";
   position:absolute;
@@ -29,6 +30,7 @@ body::after{
   pointer-events:none;
 }
 
+/* Floating hearts */
 .float{
   position:absolute;
   bottom:-40px;
@@ -66,6 +68,7 @@ body::after{
   }
 }
 
+/* Card */
 .card{
   position:relative;
   background:linear-gradient(180deg,#fff6f9,#ffeaf1);
@@ -181,8 +184,8 @@ button{
   <div class="question" id="qel"></div>
 
   <div class="buttons" id="buttons">
-    <button class="yes" onclick="submitAnswer('Yes 🤍','yes.html')">Yes 🤍</button>
-    <button class="ofcourse" onclick="submitAnswer('Of Course 💗','ofcourse.html')">Of course 💗</button>
+    <button type="button" class="yes" onclick="submitAnswer('Yes 🤍','yes.html')">Yes 🤍</button>
+    <button type="button" class="ofcourse" onclick="submitAnswer('Of Course 💗','ofcourse.html')">Of course 💗</button>
   </div>
 </div>
 
@@ -206,7 +209,7 @@ const lines = [
   {text:"I didn’t want to ask you in a random way.", el:document.getElementById("t1el")},
   {text:"You matter to me more than that. Being around you feels easy… natural.", el:document.getElementById("t2el")},
   {text:"And I don’t want this to just stay ‘something.’", el:document.getElementById("t3el")},
-  {text:"Nuraan, can I be your boyfriend?", el:document.getElementById("qel")}
+  {text:"Nuraan, will you be my girlfriend?", el:document.getElementById("qel")}
 ];
 
 let lineIndex=0;
@@ -229,26 +232,22 @@ function typeLine(){
 }
 typeLine();
 
-// Proper submission without redirecting to Formspree
+// Fetch submission (no redirect to Formspree page)
 function submitAnswer(choice, page){
 
   fetch("https://formspree.io/f/xnjjowzp", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json"
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Accept":"application/json"
     },
-    body: JSON.stringify({
-      Answer: choice,
-      Timestamp: new Date().toLocaleString()
+    body:JSON.stringify({
+      Answer:choice,
+      Timestamp:new Date().toLocaleString()
     })
   })
-  .then(() => {
-    window.location.href = page;
-  })
-  .catch(() => {
-    window.location.href = page;
-  });
+  .then(()=>window.location.href=page)
+  .catch(()=>window.location.href=page);
 }
 </script>
 
