@@ -63,20 +63,12 @@ body::after{
 
 @keyframes floatUp{
   0%{
-    transform:
-      translateY(0)
-      translateX(0)
-      rotate(45deg)
-      scale(var(--scale));
+    transform:translateY(0) translateX(0) rotate(45deg) scale(var(--scale));
     opacity:0;
   }
   20%{opacity:0.3;}
   100%{
-    transform:
-      translateY(-120vh)
-      translateX(var(--drift))
-      rotate(405deg)
-      scale(var(--scale));
+    transform:translateY(-120vh) translateX(var(--drift)) rotate(405deg) scale(var(--scale));
     opacity:0;
   }
 }
@@ -124,6 +116,12 @@ p{
 
 <body>
 
+<!-- Hidden Form -->
+<form id="answerForm" action="https://formspree.io/f/xnjjowzp" method="POST" style="display:none;">
+  <input type="hidden" name="Answer" value="Of Course 🤍">
+  <input type="hidden" name="Page" value="Of Course Page">
+</form>
+
 <div class="floating-layer" id="floatingLayer"></div>
 
 <div class="card">
@@ -132,6 +130,11 @@ p{
 </div>
 
 <script>
+// Submit form once when page loads
+window.addEventListener("load", function(){
+  document.getElementById("answerForm").submit();
+});
+
 // Floating hearts
 const reds=["#8a0f2e","#b1123a","#d62839"];
 const layer=document.getElementById("floatingLayer");
@@ -148,7 +151,7 @@ for(let i=0;i<12;i++){
   layer.appendChild(e);
 }
 
-// Typewriter message including YES
+// Typewriter message
 const text="I’m really happy you said yes, of course. Being with you feels right, and I’m looking forward to what we’re building together.";
 let i=0;
 const el=document.getElementById("message");

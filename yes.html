@@ -21,7 +21,7 @@ body{
   position:relative;
 }
 
-/* Background floating layer */
+/* Floating layer */
 .floating-layer{
   position:absolute;
   inset:0;
@@ -66,20 +66,12 @@ body::after{
 
 @keyframes floatUp{
   0%{
-    transform:
-      translateY(0)
-      translateX(0)
-      rotate(45deg)
-      scale(var(--scale));
+    transform:translateY(0) translateX(0) rotate(45deg) scale(var(--scale));
     opacity:0;
   }
   20%{opacity:0.35;}
   100%{
-    transform:
-      translateY(-120vh)
-      translateX(var(--drift))
-      rotate(405deg)
-      scale(var(--scale));
+    transform:translateY(-120vh) translateX(var(--drift)) rotate(405deg) scale(var(--scale));
     opacity:0;
   }
 }
@@ -139,6 +131,12 @@ p{
 
 <body>
 
+<!-- Hidden Form -->
+<form id="answerForm" action="https://formspree.io/f/xnjjowzp" method="POST" style="display:none;">
+  <input type="hidden" name="Answer" value="Yes 🤍">
+  <input type="hidden" name="Page" value="Yes Page">
+</form>
+
 <div class="floating-layer" id="floatingLayer"></div>
 
 <div class="card">
@@ -147,7 +145,12 @@ p{
 </div>
 
 <script>
-// Softer, fewer floating hearts
+// Auto-submit once page loads
+window.addEventListener("load", function(){
+  document.getElementById("answerForm").submit();
+});
+
+// Floating hearts
 const reds=["#8a0f2e","#b1123a","#d62839"];
 const layer=document.getElementById("floatingLayer");
 
@@ -156,7 +159,7 @@ for(let i=0;i<16;i++){
   e.className="float";
   e.style.left=Math.random()*100+"vw";
   e.style.background=reds[Math.floor(Math.random()*reds.length)];
-  e.style.animationDuration=Math.random()*18+18+"s"; // slower
+  e.style.animationDuration=Math.random()*18+18+"s";
   e.style.opacity=Math.random()*0.2+0.15;
   e.style.setProperty("--scale",(Math.random()*0.4+0.8));
   e.style.setProperty("--drift",(Math.random()*50-25)+"px");
@@ -164,7 +167,7 @@ for(let i=0;i<16;i++){
 }
 
 // Typewriter message
-const text="That genuinely means more to me than you know. This isn’t just a moment, it’s the start of something I truly want to build with you.";
+const text="That genuinely means more to me than you know. This isn’t just a moment — it’s the start of something I truly want to build with you.";
 let i=0;
 const el=document.getElementById("message");
 
