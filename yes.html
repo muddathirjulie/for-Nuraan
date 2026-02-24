@@ -3,79 +3,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thank You 💖</title>
+<title>You Said Yes 🤍</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
-body {
-  margin: 0;
-  height: 100vh;
-  background: radial-gradient(circle at top, #ffe4ec, #f6b8c4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Playfair Display", serif;
-  overflow: hidden;
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  height:100vh;
+  background: radial-gradient(circle at top, #ffe4ec, #f4b6c2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:"Playfair Display",serif;
+  overflow:hidden;
+  position:relative;
 }
 
-.float {
-  position: absolute;
-  bottom: -40px;
-  opacity: 0.5;
-  animation: floatUp linear infinite;
+/* Soft vignette */
+body::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.2));
+  pointer-events:none;
 }
 
-@keyframes floatUp {
-  from { transform: translateY(0); }
-  to { transform: translateY(-120vh); }
+/* Floating crimson hearts */
+.float{
+  position:absolute;
+  bottom:-40px;
+  width:18px;
+  height:18px;
+  transform:rotate(45deg);
+  opacity:0.35;
+  animation:floatUp linear infinite;
+  pointer-events:none;
+  filter:drop-shadow(0 0 10px rgba(120,0,30,0.45));
 }
 
-.card {
-  background: linear-gradient(180deg, #fff6f8, #ffe9ef);
-  padding: 60px 50px;
-  border-radius: 35px;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.25);
-  text-align: center;
-  max-width: 500px;
-  width: 90%;
+.float::before,
+.float::after{
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  background:inherit;
+  border-radius:50%;
 }
 
-h1 {
-  font-family: "Great Vibes", cursive;
-  font-size: 3rem;
-  color: #c9184a;
+.float::before{ top:-9px; left:0; }
+.float::after{ left:-9px; top:0; }
+
+@keyframes floatUp{
+  0%{
+    transform:
+      translateY(0)
+      translateX(0)
+      rotate(45deg)
+      scale(var(--scale));
+    opacity:0;
+  }
+  20%{opacity:0.45;}
+  100%{
+    transform:
+      translateY(-120vh)
+      translateX(var(--drift))
+      rotate(405deg)
+      scale(var(--scale));
+    opacity:0;
+  }
 }
 
-p {
-  font-size: 1.2rem;
-  color: #5a3a42;
+/* Card */
+.card{
+  position:relative;
+  background:linear-gradient(180deg,#fff6f8,#ffe9ef);
+  padding:70px 60px;
+  border-radius:42px;
+  box-shadow:0 50px 100px rgba(0,0,0,0.3);
+  text-align:center;
+  max-width:560px;
+  width:92%;
+  animation:fadeUp 1.4s ease forwards, floatCard 6s ease-in-out infinite;
+  opacity:0;
+  transform:translateY(25px);
+}
+
+.card::after{
+  content:"";
+  position:absolute;
+  inset:-16px;
+  border-radius:52px;
+  background:linear-gradient(120deg,#ffd6e5,#ffffff);
+  opacity:0.25;
+  filter:blur(35px);
+  z-index:-1;
+}
+
+@keyframes fadeUp{
+  to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes floatCard{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-12px);}
+  100%{transform:translateY(0);}
+}
+
+h1{
+  font-family:"Great Vibes",cursive;
+  font-size:3.3rem;
+  color:#8a0f2e;
+  margin-bottom:30px;
+}
+
+p{
+  font-size:1.25rem;
+  color:#5a3a42;
+  line-height:1.9;
+  min-height:3.5em;
 }
 </style>
 </head>
 
 <body>
 
+<div class="card">
+  <h1>You said yes 🤍</h1>
+  <p id="message"></p>
+</div>
+
 <script>
-const symbols=["❤","🌹","💗"];
-for(let i=0;i<25;i++){
+// Floating crimson hearts
+const reds=["#8a0f2e","#b1123a","#d62839"];
+
+for(let i=0;i<32;i++){
   const e=document.createElement("div");
   e.className="float";
-  e.innerHTML=symbols[Math.floor(Math.random()*symbols.length)];
   e.style.left=Math.random()*100+"vw";
-  e.style.fontSize=Math.random()*20+14+"px";
-  e.style.animationDuration=Math.random()*8+10+"s";
+  e.style.background=reds[Math.floor(Math.random()*reds.length)];
+  e.style.animationDuration=Math.random()*10+14+"s";
+  e.style.opacity=Math.random()*0.3+0.2;
+  e.style.setProperty("--scale",(Math.random()*0.6+0.7));
+  e.style.setProperty("--drift",(Math.random()*100-50)+"px");
   document.body.appendChild(e);
 }
-</script>
 
-<div class="card">
-  <h1>You said Yes 💖</h1>
-  <p>
-    That genuinely means a lot.  
-    I can’t wait to make Valentine’s Day special with you 🌹
-  </p>
-</div>
+// Typewriter message
+const text="That genuinely means more to me than you know. This isn’t just a moment, it’s the start of something I really want to build with you.";
+let i=0;
+const el=document.getElementById("message");
+
+function type(){
+  if(i<text.length){
+    el.innerHTML+=text.charAt(i++);
+    setTimeout(type,45);
+  }
+}
+
+type();
+</script>
 
 </body>
 </html>
