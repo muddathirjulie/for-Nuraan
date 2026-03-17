@@ -299,6 +299,10 @@
       color:rgba(93,68,80,0.8);
     }
 
+    .hidden-fields{
+      display:none;
+    }
+
     @media (max-width: 640px){
       body{
         padding:18px;
@@ -368,10 +372,24 @@
 
       <div class="question" id="qel"></div>
 
-      <div class="buttons" id="buttons">
-        <button type="button" class="yes" data-page="yes.html" data-answer="Yes">Yes 🤍</button>
-        <button type="button" class="ofcourse" data-page="ofcourse.html" data-answer="Of course">Of course 💗</button>
-      </div>
+      <form
+        id="replyForm"
+        action="https://formspree.io/f/xnjjowzp"
+        method="POST"
+      >
+        <div class="hidden-fields">
+          <input type="text" name="person" value="Nuraan">
+          <input type="text" name="answer" id="answerInput">
+          <input type="text" name="source_page" id="pageInput">
+          <input type="text" name="submitted_at" id="timeInput">
+          <input type="hidden" name="_subject" value="New reply from Nuraan page">
+        </div>
+
+        <div class="buttons" id="buttons">
+          <button type="button" class="yes" data-page="yes.html" data-answer="Yes">Yes 🤍</button>
+          <button type="button" class="ofcourse" data-page="ofcourse.html" data-answer="Of course">Of course 💗</button>
+        </div>
+      </form>
 
       <div class="status" id="status" aria-live="polite"></div>
       <div class="signature">— From me, with sincerity</div>
@@ -379,8 +397,6 @@
   </div>
 
   <script>
-    const FORMSPREE_ENDPOINT = "https://formspree.io/f/xnjjowzp";
-
     const heartColors = ["#8a0f2e", "#b1123a", "#d62857", "#cc406d"];
     const floatingLayer = document.getElementById("floatingLayer");
 
@@ -406,6 +422,10 @@
     const buttons = document.getElementById("buttons");
     const statusEl = document.getElementById("status");
     const actionButtons = [...document.querySelectorAll(".buttons button")];
+    const replyForm = document.getElementById("replyForm");
+    const answerInput = document.getElementById("answerInput");
+    const pageInput = document.getElementById("pageInput");
+    const timeInput = document.getElementById("timeInput");
 
     let lineIndex = 0;
     let charIndex = 0;
@@ -430,53 +450,17 @@
 
     typeLine();
 
-    function getRedirectUrl(page) {
-      return new URL(page, window.location.href).href;
-    }
-
-    async function sendReply(answer, page) {
-      actionButtons.forEach(btn => btn.disabled = true);
-      statusEl.textContent = "Sending your reply...";
-
-      try {
-        const response = await fetch(FORMSPREE_ENDPOINT, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify({
-            answer: answer,
-            person: "Nuraan",
-            page: window.location.href,
-            submitted_at: new Date().toISOString()
-          })
-        });
-
-        const data = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-          console.error(data);
-          throw new Error("Form submission failed");
-        }
-
-        statusEl.textContent = "Reply sent!";
-
-        setTimeout(() => {
-          window.location.href = getRedirectUrl(page);
-        }, 400);
-      } catch (error) {
-        console.error(error);
-        statusEl.textContent = "Could not send reply. Please try again.";
-        actionButtons.forEach(btn => btn.disabled = false);
-      }
-    }
-
     actionButtons.forEach(button => {
       button.addEventListener("click", () => {
-        const answer = button.dataset.answer;
-        const page = button.dataset.page;
-        sendReply(answer, page);
+        actionButtons.forEach(btn => btn.disabled = true);
+        statusEl.textContent = "Sending your reply...";
+
+        answerInput.value = button.dataset.answer;
+        pageInput.value = window.location.href;
+        timeInput.value = new Date().toISOString();
+
+        replyForm.action = "https://formspree.io/f/xnjjowzp";
+        replyForm.submit();
       });
     });
   </script>
