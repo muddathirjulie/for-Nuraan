@@ -269,6 +269,12 @@
       box-shadow:0 16px 30px rgba(133,17,51,0.18);
     }
 
+    button:disabled{
+      opacity:0.7;
+      cursor:not-allowed;
+      transform:none;
+    }
+
     .yes{
       background:linear-gradient(135deg, var(--accent-dark), #d62857);
       color:var(--white);
@@ -363,8 +369,8 @@
       <div class="question" id="qel"></div>
 
       <div class="buttons" id="buttons">
-        <button type="button" class="yes" data-page="yes.html">Yes 🤍</button>
-        <button type="button" class="ofcourse" data-page="ofcourse.html">Of course 💗</button>
+        <button type="button" class="yes" data-page="yes.html" data-answer="Yes">Yes 🤍</button>
+        <button type="button" class="ofcourse" data-page="ofcourse.html" data-answer="Of course">Of course 💗</button>
       </div>
 
       <div class="status" id="status" aria-live="polite"></div>
@@ -373,6 +379,8 @@
   </div>
 
   <script>
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/xnjjowzp";
+
     const heartColors = ["#8a0f2e", "#b1123a", "#d62857", "#cc406d"];
     const floatingLayer = document.getElementById("floatingLayer");
 
@@ -426,19 +434,49 @@
       return new URL(page, window.location.href).href;
     }
 
-    function openReply(page) {
-      const redirectUrl = getRedirectUrl(page);
+    async function sendReply(answer, page) {
       actionButtons.forEach(btn => btn.disabled = true);
-      statusEl.textContent = "Opening your reply...";
+      statusEl.textContent = "Sending your reply...";
 
-      setTimeout(() => {
-        window.location.href = redirectUrl;
-      }, 160);
+      try {
+        const response = await fetch(FORMSPREE_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            answer: answer,
+            person: "Nuraan",
+            page: window.location.href,
+            submitted_at: new Date().toISOString()
+          })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          console.error(data);
+          throw new Error("Form submission failed");
+        }
+
+        statusEl.textContent = "Reply sent!";
+
+        setTimeout(() => {
+          window.location.href = getRedirectUrl(page);
+        }, 400);
+      } catch (error) {
+        console.error(error);
+        statusEl.textContent = "Could not send reply. Please try again.";
+        actionButtons.forEach(btn => btn.disabled = false);
+      }
     }
 
     actionButtons.forEach(button => {
       button.addEventListener("click", () => {
-        openReply(button.dataset.page);
+        const answer = button.dataset.answer;
+        const page = button.dataset.page;
+        sendReply(answer, page);
       });
     });
   </script>
